@@ -1,5 +1,6 @@
 name: checkin
 on:
+  workflow_dispatch:
   schedule:
     - cron: '16 8 * * *'
 jobs:
@@ -30,7 +31,7 @@ jobs:
         run: |
           python main.py >> ./run.log && printf "\n" >> ./run.log
           tail run.log
-      - name: 'auto-commit'
+      - name: 'auto commit'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: 'auto checkin'
