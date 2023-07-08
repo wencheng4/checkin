@@ -1,0 +1,37 @@
+name: checkin
+on:
+  schedule:
+    - cron: '16 8 * * *'
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'setup timezone'
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Asia/Shanghai
+      - name: 'checkout'
+        uses: actions/checkout@v3
+      - name: 'setup python'
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+      - name: 'install requirements'
+        run: pip install -r requirements.txt
+      - name: 'working'
+        env:
+          MAIL.HOST: ${{ secrets.MAIL_HOST }}
+          MAIL.PORT: ${{ secrets.MAIL_PORT }}
+          MAIL.SENDER: ${{ secrets.MAIL_SENDER }}
+          MAIL.RECEIVER: ${{ secrets.MAIL_RECEIVER }}
+          MAIL.PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          SOCKBOOM.USER: ${{ secrets.SOCKBOOM_USER }}
+          SOCKBOOM.PASSWD: ${{ secrets.SOCKBOOM_PASSWD }}
+        run: |
+          python main.py >> ./run.log && printf "\n" >> ./run.log
+          tail run.log
+      - name: 'auto-commit'
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'auto checkin'
+          branch: main

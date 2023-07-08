@@ -40,12 +40,10 @@ class Sockboom(Checkin):
         return login_response_body['msg']
 
     def checkin(self):
-        print("sockboom 签到开始...")
-
         username = self._login()
         msg = self._checkin()
         self._logout()
 
-        print("sockboom 签到成功")
-
-        return f"sockboom[{self.BASE_URL}]: {username} {msg}"
+        msg = f"sockboom[{self.BASE_URL}]: {username} {msg}"
+        print(msg)
+        return msg
